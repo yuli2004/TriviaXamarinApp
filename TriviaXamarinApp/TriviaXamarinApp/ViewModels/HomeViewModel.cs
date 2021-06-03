@@ -12,7 +12,7 @@ namespace TriviaXamarinApp.ViewModels
         public ICommand NavigateToPageCommand { get; set; }
         public HomeViewModel()
         {
-            NavigateToPageCommand = new Command<string>(NavigateToPage);
+            this.NavigateToPageCommand = new Command<string>(NavigateToPage);
         }
 
         private void NavigateToPage(string obj)
@@ -45,7 +45,7 @@ namespace TriviaXamarinApp.ViewModels
 
 
             }
-            Application.Current.MainPage.Navigation.PushAsync(p);
+            App.Current.MainPage.Navigation.PushAsync(p);
         }
     }
 }

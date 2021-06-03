@@ -7,7 +7,7 @@ using TriviaXamarinApp.Views;
 
 namespace TriviaXamarinApp.ViewModels
 {
-    class QuestionManagerViewModel
+    class QuestionManagerViewModel : ModelViewBase
     {
         public ICommand NavigateToPageCommand { get; set; }
         public QuestionManagerViewModel()
@@ -38,7 +38,7 @@ namespace TriviaXamarinApp.ViewModels
 
 
             }
-            Application.Current.MainPage.Navigation.PushAsync(p);
+            App.Current.MainPage.Navigation.PushAsync(p);
         }
     }
 }

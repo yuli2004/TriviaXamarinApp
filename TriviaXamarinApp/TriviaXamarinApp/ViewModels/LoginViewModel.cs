@@ -13,8 +13,16 @@ namespace TriviaXamarinApp.ViewModels
     {
         private string email, password;
 
-        public string Email { get { return this.email; } set { if (this.email != value) { this.email = value; OnPropertyChange("Email"); } } }
-        public string Password { get { return this.password; } set { if (this.password != value) { this.password = value; OnPropertyChange("Password"); } } }
+        public string Email
+        {
+            get { return this.email; }
+            set { if (this.email != value) { this.email = value; OnPropertyChange(nameof(Email)); } }
+        }
+        public string Password
+        {
+            get { return this.password; }
+            set { if (this.password != value) { this.password = value; OnPropertyChange(nameof(Password)); } }
+        }
 
         public ICommand LoginCommand { get; set; }
 
@@ -23,7 +31,7 @@ namespace TriviaXamarinApp.ViewModels
             this.email = "";
             this.password = "";
 
-            LoginCommand = new Command(Login);
+            LoginCommand = new Command(this.Login);
         }
 
         public async void Login()
@@ -38,7 +46,7 @@ namespace TriviaXamarinApp.ViewModels
                 Page p = new QuestionManager();
                 p.Title = "QuestionManager";
                 p.BindingContext = new QuestionManagerViewModel();
-                await Application.Current.MainPage.Navigation.PushAsync(p);
+                await App.Current.MainPage.Navigation.PushAsync(p);
             }
         }
     }

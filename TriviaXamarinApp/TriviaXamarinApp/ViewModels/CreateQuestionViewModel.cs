@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TriviaXamarinApp.ViewModels
 {
-    class UpdateOrDeleteQuestionViewModel :ModelViewBase
+    class CreateQuestionViewModel
     {
     }
 }

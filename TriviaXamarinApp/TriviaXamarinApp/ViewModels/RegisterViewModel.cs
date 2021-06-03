@@ -13,9 +13,21 @@ namespace TriviaXamarinApp.ViewModels
     {
         private string email, username, password;
 
-        public string Email { get { return this.email; } set { if (this.email != value) { this.email = value; OnPropertyChange("Email"); } } }
-        public string UserName { get { return this.username; } set { if (this.username != value) { this.username = value; OnPropertyChange("UserName"); } } }
-        public string Password { get { return this.password; } set { if (this.password != value) { this.password = value; OnPropertyChange("Password"); } } }
+        public string Email
+        {
+            get { return this.email; }
+            set { if (this.email != value) { this.email = value; OnPropertyChange(nameof(Email)); } }
+        }
+        public string UserName
+        {
+            get { return this.username; }
+            set { if (this.username != value) { this.username = value; OnPropertyChange(nameof(UserName)); } }
+        }
+        public string Password
+        {
+            get { return this.password; }
+            set { if (this.password != value) { this.password = value; OnPropertyChange(nameof(Password)); } }
+        }
 
         public ICommand RegisterCommand { get; set; }
 
@@ -25,7 +37,7 @@ namespace TriviaXamarinApp.ViewModels
             this.username = "";
             this.password = "";
 
-            RegisterCommand = new Command(Register);
+            RegisterCommand = new Command(this.Register);
         }
 
         public async void Register()
@@ -34,14 +46,14 @@ namespace TriviaXamarinApp.ViewModels
             User u = new User { Email = Email, NickName = UserName, Password = Password };
             bool res = await proxy.RegisterUser(u);
 
-            if(res)
+            if (res)
             {
                 App a = (App)App.Current;
                 a.CurrentUser = u;
                 Play p = new Play();
                 p.Title = "Game";
                 p.BindingContext = new PlayViewModel();
-                await Application.Current.MainPage.Navigation.PushAsync(p);
+                await App.Current.MainPage.Navigation.PushAsync(p);
             }
         }
     }

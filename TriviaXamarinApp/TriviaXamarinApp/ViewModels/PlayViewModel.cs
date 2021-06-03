@@ -11,68 +11,127 @@ using TriviaXamarinApp.Views;
 
 namespace TriviaXamarinApp.ViewModels
 {
-    class ChangeColor:INotifyPropertyChanged
+    class ChangeColor : ModelViewBase, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         private string color;
         public string Color
         {
             get { return this.color; }
-            set { this.color = value; OnPropertyChanged(nameof(color)); }
+            set { if (this.color != value) { this.color = value; OnPropertyChange(nameof(Color)); } }
         }
 
-        private string aText;
-        public string AText
+        private string answerText;
+        public string AnswerText
         {
-            get { return this.aText; }
-            set { this.color = value; OnPropertyChanged(nameof(color)); }
+            get { return this.answerText; }
+            set { if (this.answerText != value) { this.answerText = value; OnPropertyChange(nameof(Color)); } }
         }
-
     }
-    class QuestionsViewModel:INotifyPropertyChanged
+    class PlayViewModel : ModelViewBase, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public ObservableCollection<ChangeColor> Answers { get; set; }
-        private string qText;
-        public string QText
+        private string questionText;
+        public string QuestionText
         {
-            get { return this.qText; }
-            set { this.qText = value; OnPropertyChanged(nameof(QText)); }
+            get { return this.questionText; }
+            set { this.questionText = value; OnPropertyChange(nameof(QuestionText)); }
         }
 
         private bool click;
         public bool Click
         {
             get { return this.click; }
-            set { this.click = value; OnPropertyChanged(nameof(Click)); }
+            set { this.click = value; OnPropertyChange(nameof(Click)); }
         }
-    }
-    
-    class PlayViewModel : ModelViewBase, INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         private string message;
         public string Message
         {
             get { return this.message; }
-            set { this.message = value; OnPropertyChanged(nameof(Message)); }
+            set { this.message = value; OnPropertyChange(nameof(Message)); }
         }
-        //ergtrwsyert
-        //gjhjft
+
+        private int counter = 0;
+        private bool answerd;
+        public AmericanQuestion Question { get; set; }
+
+        public PlayViewModel()
+        {
+            Answers = new ObservableCollection<ChangeColor>();
+            Question = new AmericanQuestion();
+            this.GetQuestion();
+            this.answerd = false;
+            Click = false;
+            Message = "";
+
+        }
+
+        public void GetQuestion()
+        {
+            TriviaWebAPIProxy proxy = TriviaWebAPIProxy.CreateProxy();
+            Question = new AmericanQuestion();
+            if (Question != null)
+                QuestionText = Question.QText;
+            this.Show();
+        }
+
+        public void Show()
+        {
+            Random r = new Random();
+            int index = r.Next(0, 5);
+            string[] sArr = new string[4];
+            sArr[index] = Question.CorrectAnswer;
+            int countOther = 0;
+            for (int i = 0; i < sArr.Length; i++)
+            {
+                if (sArr[i] == null)
+                {
+                    sArr[i] = Question.OtherAnswers[countOther];
+                    countOther++;
+                }
+            }
+            for (int i = 0; i < sArr.Length; i++)
+            {
+                ChangeColor c = new ChangeColor
+                {
+                    Color = "Black",
+                    AnswerText = sArr[i]
+                };
+                Answers.Add(c);
+            }
+        }
+
+        public ICommand IsCorrectCommand => new Command<ChangeColor>(ChangeColor);
+        public void ChangeColor(ChangeColor clicked)
+        {
+            if(!answerd)
+            {
+                if (clicked.AnswerText == Question.CorrectAnswer)
+                {
+                    clicked.Color = "Green";
+                    this.counter++;
+                }
+                else
+                    clicked.Color = "Red";
+                answerd = true;
+            }
+            if (this.counter != 0 && this.counter % 3 == 0)
+                Click = true;
+        }
+
+        public ICommand NavigateToPageCommand => new Command<string>(NavigateToPage);
+        private async void NavigateToPage(string obj)
+        {
+            TriviaWebAPIProxy proxy = TriviaWebAPIProxy.CreateProxy();
+            App a = (App)App.Current;
+
+            if (a != null)
+            {
+                Page p = new QuestionManager();
+                p.Title = "QuestionManager";
+                p.BindingContext = new QuestionManagerViewModel();
+                await App.Current.MainPage.Navigation.PushAsync(p);
+            }
+        }
     }
 }
+
