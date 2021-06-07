@@ -15,6 +15,7 @@ namespace TriviaXamarinApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Play : ContentPage
     {
+        public Play() { }
         public Play(AmericanQuestion a, int score)
         {
             PlayViewModel context = new PlayViewModel(a, score);

@@ -30,6 +30,7 @@ namespace TriviaXamarinApp.ViewModels
     }
     class PlayViewModel : ModelViewBase, INotifyPropertyChanged
     {
+        public PlayViewModel() { }
         private AmericanQuestion a;
         public AmericanQuestion Question
         {
