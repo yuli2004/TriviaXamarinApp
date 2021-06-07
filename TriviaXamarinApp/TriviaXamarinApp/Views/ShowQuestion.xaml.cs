@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace TriviaXamarinApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CreateQuestion : ContentPage
+    public partial class ShowQuestion : ContentPage
     {
-        public CreateQuestion()
+        public ShowQuestion()
         {
             InitializeComponent();
         }

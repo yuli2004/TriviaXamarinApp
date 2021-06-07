@@ -8,130 +8,156 @@ using Xamarin.Forms;
 using TriviaXamarinApp.Models;
 using TriviaXamarinApp.Services;
 using TriviaXamarinApp.Views;
+using TriviaXamarinApp.ViewModels;
 
 namespace TriviaXamarinApp.ViewModels
 {
-    class ChangeColor : ModelViewBase, INotifyPropertyChanged
+    class AnswerViewModel : ModelViewBase, INotifyPropertyChanged
     {
-        private string color;
-        public string Color
+        private string s;
+        private Color c;
+        public string Answer
         {
-            get { return this.color; }
-            set { if (this.color != value) { this.color = value; OnPropertyChange(nameof(Color)); } }
+            get { return this.s; }
+            set { if (this.s != value) { this.s = value; OnPropertyChange("Answer"); } }
+        }
+        public Color BackgroundColor
+        {
+            get { return this.c; }
+            set { if (this.c != value) { this.c = value; OnPropertyChange("BackgroundColor"); } }
         }
 
-        private string answerText;
-        public string AnswerText
-        {
-            get { return this.answerText; }
-            set { if (this.answerText != value) { this.answerText = value; OnPropertyChange(nameof(Color)); } }
-        }
     }
     class PlayViewModel : ModelViewBase, INotifyPropertyChanged
     {
-        public ObservableCollection<ChangeColor> Answers { get; set; }
-        private string questionText;
+        private AmericanQuestion a;
+        public AmericanQuestion Question
+        {
+            get { return this.a; }
+            set { if (this.a != value) { this.a = value; OnPropertyChange("Question"); } }
+        }
+
+        private int s;
+        public int Score
+        {
+            get { return this.s; }
+            set { if (this.s != value) { this.s = value; OnPropertyChange("Score"); } }
+        }
+
+        private string q;
         public string QuestionText
         {
-            get { return this.questionText; }
-            set { this.questionText = value; OnPropertyChange(nameof(QuestionText)); }
+            get { return this.q; }
+            set { if (this.q != value) { this.q = value; OnPropertyChange("QuestionText"); } }
         }
-
-        private bool click;
-        public bool Click
+        private Answer[] arr;
+        public Answer[] Options
         {
-            get { return this.click; }
-            set { this.click = value; OnPropertyChange(nameof(Click)); }
+            get { return this.arr; }
+            set { if (this.arr != value) { this.arr = value; OnPropertyChange("Options"); } }
         }
-        private string message;
-        public string Message
+        public string[] Colors { get; set; }
+        public int CorrectAnswerIndex { get; set; }
+
+        public PlayViewModel(AmericanQuestion question, int score)
         {
-            get { return this.message; }
-            set { this.message = value; OnPropertyChange(nameof(Message)); }
-        }
-
-        private int counter = 0;
-        private bool answerd;
-        public AmericanQuestion Question { get; set; }
-
-        public PlayViewModel()
-        {
-            Answers = new ObservableCollection<ChangeColor>();
-            Question = new AmericanQuestion();
-            this.GetQuestion();
-            this.answerd = false;
-            Click = false;
-            Message = "";
-
-        }
-
-        public void GetQuestion()
-        {
-            TriviaWebAPIProxy proxy = TriviaWebAPIProxy.CreateProxy();
-            Question = new AmericanQuestion();
-            if (Question != null)
-                QuestionText = Question.QText;
-            this.Show();
-        }
-
-        public void Show()
-        {
-            Random r = new Random();
-            int index = r.Next(0, 5);
-            string[] sArr = new string[4];
-            sArr[index] = Question.CorrectAnswer;
-            int countOther = 0;
-            for (int i = 0; i < sArr.Length; i++)
+            try
             {
-                if (sArr[i] == null)
+                AmericanQuestion a = question;
+                Answer[] options = new Answer[4];
+                Random r = new Random();
+                int num = r.Next(0, 4);
+                options[num] = new Answer
                 {
-                    sArr[i] = Question.OtherAnswers[countOther];
-                    countOther++;
+                    text = a.CorrectAnswer,
+                    color = new Color(33, 205, 47),
+                };
+                for (int i = 0, optionNum = 0; i < options.Length; i++)
+                {
+                    if (options[i] == null)
+                    {
+                        options[i] = new Answer
+                        {
+                            text = a.OtherAnswers[optionNum],
+                            color = new Color(252, 13, 13),
+                        };
+                        optionNum++;
+                    }
+                }
+
+                this.Options = options;
+                this.Question = a;
+                this.QuestionText = a.QText;
+                this.CorrectAnswerIndex = num;
+                this.Score = score;
+            }
+            catch (Exception e) { }
+        }
+
+        public ICommand OptionClicked => new Command<Object>(OptionClick);
+
+        public async void OptionClick(Object o)
+        {
+            if (o is Answer)
+            {
+                if (((Answer)o).text.Equals(Question.CorrectAnswer))
+                {
+                    Score++;
+
                 }
             }
-            for (int i = 0; i < sArr.Length; i++)
-            {
-                ChangeColor c = new ChangeColor
-                {
-                    Color = "Black",
-                    AnswerText = sArr[i]
-                };
-                Answers.Add(c);
-            }
-        }
 
-        public ICommand IsCorrectCommand => new Command<ChangeColor>(ChangeColor);
-        public void ChangeColor(ChangeColor clicked)
-        {
-            if(!answerd)
+            if (Score >= 3)
             {
-                if (clicked.AnswerText == Question.CorrectAnswer)
+                bool isLoggedIn = App.Current.Properties.ContainsKey("IsLoggedIn") ? Convert.ToBoolean(App.Current.Properties["IsLoggedIn"]) : false;
+                Page p;
+                if (!isLoggedIn)
                 {
-                    clicked.Color = "Green";
-                    this.counter++;
+                    p = new Login();
+                    LoginViewModel log = (LoginViewModel)p.BindingContext;
+                    //log.NextPage = new AddQuestion();
                 }
                 else
-                    clicked.Color = "Red";
-                answerd = true;
+                {
+                    p = new AddQuestion();
+                    AddQuestionViewModel add = (AddQuestionViewModel)p.BindingContext;
+                    TriviaWebAPIProxy proxy = TriviaWebAPIProxy.CreateProxy();
+                    AmericanQuestion amricanQuestion = await proxy.GetRandomQuestion();
+                    add.NextPage = new Play(amricanQuestion, 0);
+                }
+
+                if (NavigateToPageEvent != null)
+                    NavigateToPageEvent(p);
             }
-            if (this.counter != 0 && this.counter % 3 == 0)
-                Click = true;
-        }
-
-        public ICommand NavigateToPageCommand => new Command<string>(NavigateToPage);
-        private async void NavigateToPage(string obj)
-        {
-            TriviaWebAPIProxy proxy = TriviaWebAPIProxy.CreateProxy();
-            App a = (App)App.Current;
-
-            if (a != null)
+            else
             {
-                Page p = new QuestionManager();
-                p.Title = "QuestionManager";
-                p.BindingContext = new QuestionManagerViewModel();
-                await App.Current.MainPage.Navigation.PushAsync(p);
+
+                TriviaWebAPIProxy proxy = TriviaWebAPIProxy.CreateProxy();
+                AmericanQuestion amricanQuestion = await proxy.GetRandomQuestion();
+                Page p = new Play(amricanQuestion, Score);
+                if (NavigateToPageEvent != null)
+                    NavigateToPageEvent(p);
+
             }
         }
+
+        public ICommand NavigateToPageCommand { get; set; }
+        public ICommand Home => new Command(GoHome);
+        void GoHome()
+        {
+            Page p;
+            if ((string)App.Current.Properties["IsLoggedIn"] == Boolean.TrueString)
+            {
+                p = new UpdateOrDeleteQuestion();
+            }
+            else
+            {
+                p = new Home();
+            }
+            if (NavigateToPageEvent != null)
+                NavigateToPageEvent(p);
+        }
+        public Action<Page> NavigateToPageEvent;
     }
 }
 

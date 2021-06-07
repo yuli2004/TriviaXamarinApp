@@ -1,30 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:TriviaXamarinApp.ViewModels"
-             mc:Ignorable="d"
-             x:Class="TriviaXamarinApp.Views.Play">
-    <ContentPage.BindingContext>
-        <local:PlayViewModel></local:PlayViewModel>
-    </ContentPage.BindingContext>
-    <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+             x:Class="TriviaXamarinApp.Views.Play"
+             Title="{Binding Score}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="home.png" Command="{Binding Home}" Order="Primary" Priority="0"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content >
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <StackLayout>
+            <Grid VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <Button  Grid.Row="0" Command="{Binding NavigateToPageCommand}" CommandParameter="Register" Text="Register" HorizontalOptions="Center"/>
-            <Button Grid.Row="1" Command="{Binding NavigateToPageCommand}" CommandParameter="Login" Text="Login" HorizontalOptions="Center"/>
-            <Button Grid.Row="2" Command="{Binding NavigateToPageCommand}" CommandParameter="Play" Text="Play" HorizontalOptions="Center"/>
-
-        </Grid>
+                <Label x:Name="Question" Text="{Binding QuestionText}" FontSize="Large"  VerticalOptions="CenterAndExpand"  HorizontalOptions="CenterAndExpand" 
+                       Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0"  />
+                <Button x:Name="Option1" Text="{Binding Options[0].text}" Grid.Column="0"
+                        Grid.Row="1" BackgroundColor="{Binding Color1}" FontSize="Medium" 
+                        Command="{Binding OptionClicked}"
+                                           CommandParameter="{Binding Options[0]}"/>
+                <Button x:Name="Option2" Text="{Binding Options[1].text}" Grid.Column="1"
+                        Grid.Row="1" BackgroundColor="{Binding Color2}" FontSize="Medium"
+                        Command="{Binding OptionClicked}"
+                                           CommandParameter="{Binding Options[1]}"/>
+                <Button x:Name="Option3" Text="{Binding Options[2].text}"  Grid.Column="0"
+                        Grid.Row="2" BackgroundColor="{Binding Color3}" FontSize="Medium"
+                        Command="{Binding OptionClicked}"
+                                           CommandParameter="{Binding Options[2]}"/>
+                <Button x:Name="Option4" Text="{Binding Options[3].text}" Grid.Column="1"
+                        Grid.Row="2" BackgroundColor="{Binding Color4}" FontSize="Medium"
+                        Command="{Binding OptionClicked}"
+                                           CommandParameter="{Binding Options[3]}"/>
+            </Grid>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>
