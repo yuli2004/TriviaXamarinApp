@@ -12,6 +12,7 @@ namespace TriviaXamarinApp.ViewModels
 {
     class AddQuestionViewModel : ModelViewBase, INotifyPropertyChanged
     {
+        public AddQuestionViewModel() { }
         public void AddQuestion()
         {
             Label = "";
@@ -71,7 +72,6 @@ namespace TriviaXamarinApp.ViewModels
                 QText = this.Question,
                 OtherAnswers = arr,
                 CreatorNickName = u.NickName,
-
             };
             TriviaWebAPIProxy proxy = TriviaWebAPIProxy.CreateProxy();
             bool res = await proxy.PostNewQuestion(a);

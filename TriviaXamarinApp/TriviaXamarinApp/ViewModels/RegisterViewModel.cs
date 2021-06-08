@@ -50,10 +50,11 @@ namespace TriviaXamarinApp.ViewModels
             {
                 App a = (App)App.Current;
                 a.CurrentUser = u;
-                Play p = new Play();
+                AmericanQuestion amricanQuestion = await proxy.GetRandomQuestion();
+                Play p = new Play(amricanQuestion, 0);
+                PlayViewModel game = (PlayViewModel)p.BindingContext;
+                game.Score = 0;
                 p.Title = "Game";
-                p.BindingContext = new PlayViewModel();
-                await App.Current.MainPage.Navigation.PushAsync(p);
             }
         }
     }

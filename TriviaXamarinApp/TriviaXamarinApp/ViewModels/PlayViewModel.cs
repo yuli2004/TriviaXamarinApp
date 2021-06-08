@@ -104,7 +104,6 @@ namespace TriviaXamarinApp.ViewModels
                 if (((Answer)o).text.Equals(Question.CorrectAnswer))
                 {
                     Score++;
-
                 }
             }
 
@@ -115,12 +114,14 @@ namespace TriviaXamarinApp.ViewModels
                 if (!isLoggedIn)
                 {
                     p = new Login();
-                    LoginViewModel log = (LoginViewModel)p.BindingContext;
+                    p.Title = "Login";
+                    p.BindingContext = new LoginViewModel();
                     //log.NextPage = new AddQuestion();
                 }
                 else
                 {
                     p = new AddQuestion();
+                    p.Title = "Add question";
                     AddQuestionViewModel add = (AddQuestionViewModel)p.BindingContext;
                     TriviaWebAPIProxy proxy = TriviaWebAPIProxy.CreateProxy();
                     AmericanQuestion amricanQuestion = await proxy.GetRandomQuestion();
@@ -132,32 +133,30 @@ namespace TriviaXamarinApp.ViewModels
             }
             else
             {
-
                 TriviaWebAPIProxy proxy = TriviaWebAPIProxy.CreateProxy();
                 AmericanQuestion amricanQuestion = await proxy.GetRandomQuestion();
                 Page p = new Play(amricanQuestion, Score);
                 if (NavigateToPageEvent != null)
                     NavigateToPageEvent(p);
-
             }
         }
 
         public ICommand NavigateToPageCommand { get; set; }
-        public ICommand Home => new Command(GoHome);
-        void GoHome()
-        {
-            Page p;
-            if ((string)App.Current.Properties["IsLoggedIn"] == Boolean.TrueString)
-            {
-                p = new UpdateOrDeleteQuestion();
-            }
-            else
-            {
-                p = new Home();
-            }
-            if (NavigateToPageEvent != null)
-                NavigateToPageEvent(p);
-        }
+        //public ICommand Home => new Command(GoHome);
+        //void GoHome()
+        //{
+        //    Page p;
+        //    if ((string)App.Current.Properties["IsLoggedIn"] == Boolean.TrueString)
+        //    {
+        //        p = new Play();
+        //    }
+        //    else
+        //    {
+        //        p = new Home();
+        //    }
+        //    if (NavigateToPageEvent != null)
+        //        NavigateToPageEvent(p);
+        //}
         public Action<Page> NavigateToPageEvent;
     }
 }

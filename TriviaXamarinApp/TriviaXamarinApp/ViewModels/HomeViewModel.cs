@@ -4,6 +4,8 @@ using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 using TriviaXamarinApp.Views;
+using TriviaXamarinApp.Services;
+using TriviaXamarinApp.Models;
 
 namespace TriviaXamarinApp.ViewModels
 {
@@ -15,7 +17,7 @@ namespace TriviaXamarinApp.ViewModels
             this.NavigateToPageCommand = new Command<string>(NavigateToPage);
         }
 
-        private void NavigateToPage(string obj)
+        private async void NavigateToPage(string obj)
         {
             Page p = null;
             switch (obj)
@@ -36,16 +38,20 @@ namespace TriviaXamarinApp.ViewModels
                     break;
                 case "Play":
                     {
-                        p = new Play();
+                        TriviaWebAPIProxy proxy = TriviaWebAPIProxy.CreateProxy();
+                        AmericanQuestion amricanQuestion = await proxy.GetRandomQuestion();
+                        p = new Play(amricanQuestion, 0);
+                        PlayViewModel game = (PlayViewModel)p.BindingContext;
+                        game.Score = 0;
                         p.Title = "Game";
-                        p.BindingContext = new PlayViewModel();
+
                     }
                     break;
                 default: break;
 
 
             }
-            App.Current.MainPage.Navigation.PushAsync(p);
+            await App.Current.MainPage.Navigation.PushAsync(p);
         }
     }
 }

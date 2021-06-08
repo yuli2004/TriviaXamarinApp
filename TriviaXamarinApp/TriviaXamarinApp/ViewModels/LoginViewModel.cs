@@ -25,6 +25,7 @@ namespace TriviaXamarinApp.ViewModels
         }
 
         public ICommand LoginCommand { get; set; }
+        public Page NextPage { get; set; }
 
         public LoginViewModel()
         {
@@ -43,9 +44,12 @@ namespace TriviaXamarinApp.ViewModels
             {
                 App a = (App)App.Current;
                 a.CurrentUser = u;
-                Page p = new QuestionManager();
-                p.Title = "QuestionManager";
-                p.BindingContext = new QuestionManagerViewModel();
+                AmericanQuestion amricanQuestion = await proxy.GetRandomQuestion();
+                Page p = new Play(amricanQuestion, 0);
+                PlayViewModel game = (PlayViewModel)p.BindingContext;
+                game.Score = 0;
+                p.Title = "Game";
+                Application.Current.Properties["IsLoggedIn"] = Boolean.TrueString;
                 await App.Current.MainPage.Navigation.PushAsync(p);
             }
         }
