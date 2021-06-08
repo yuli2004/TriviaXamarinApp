@@ -6,7 +6,7 @@ using TriviaXamarinApp.ViewModels;
 
 namespace TriviaXamarinApp.ViewModels
 {
-    public class ShowQuestionViewModel : ModelViewBase, INotifyPropertyChanged
+    public class ShowQuestionViewModel : ModelViewBase
     {
         public string QText { get; set; }
         public string QAnswer { get; set; }

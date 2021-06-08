@@ -10,7 +10,7 @@ using TriviaXamarinApp;
 
 namespace TriviaXamarinApp.ViewModels
 {
-    class AddQuestionViewModel : ModelViewBase, INotifyPropertyChanged
+    class AddQuestionViewModel : ModelViewBase
     {
         public void AddQuestion()
         {

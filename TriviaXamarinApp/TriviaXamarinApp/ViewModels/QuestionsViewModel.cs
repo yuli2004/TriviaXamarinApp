@@ -12,7 +12,7 @@ using TriviaXamarinApp.ViewModels;
 
 namespace TriviaXamarinApp.ViewModels
 {
-    class QuestionsViewModel : ModelViewBase, INotifyPropertyChanged
+    class QuestionsViewModel : ModelViewBase
     {
         public ObservableCollection<AmericanQuestion> QuestionList { get; }
         private int c;

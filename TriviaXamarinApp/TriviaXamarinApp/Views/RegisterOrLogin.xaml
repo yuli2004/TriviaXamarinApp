@@ -5,14 +5,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:TriviaXamarinApp.ViewModels"
              mc:Ignorable="d"
-             x:Class="TriviaXamarinApp.Views.Home" Title="Menu">
+             x:Class="TriviaXamarinApp.ViewModels.RegisterOrLogin">
     <ContentPage.BindingContext>
-        <local:HomeViewModel></local:HomeViewModel>
+        <local:RegisterOrLoginViewModel></local:RegisterOrLoginViewModel>
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -20,11 +19,9 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3"/>
             </Grid.ColumnDefinitions>
-            
+
             <Button  Grid.Row="0" Command="{Binding NavigateToPageCommand}" CommandParameter="Register" Text="Register" HorizontalOptions="Center"/>
             <Button Grid.Row="1" Command="{Binding NavigateToPageCommand}" CommandParameter="Login" Text="Login" HorizontalOptions="Center"/>
-            <Button Grid.Row="2" Command="{Binding NavigateToPageCommand}" CommandParameter="Play" Text="Play" HorizontalOptions="Center"/>
-           
         </Grid>
     </ContentPage.Content>
 </ContentPage>

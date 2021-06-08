@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace TriviaXamarinApp.Views
+namespace TriviaXamarinApp.ViewModels
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class QuestionManager : ContentPage
+    public partial class RegisterOrLogin : ContentPage
     {
-        public QuestionManager()
+        public RegisterOrLogin()
         {
             InitializeComponent();
         }

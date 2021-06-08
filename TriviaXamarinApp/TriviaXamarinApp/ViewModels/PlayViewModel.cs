@@ -12,7 +12,7 @@ using TriviaXamarinApp.ViewModels;
 
 namespace TriviaXamarinApp.ViewModels
 {
-    class AnswerViewModel : ModelViewBase, INotifyPropertyChanged
+    class AnswerViewModel : ModelViewBase
     {
         private string s;
         private Color c;
@@ -113,9 +113,9 @@ namespace TriviaXamarinApp.ViewModels
                 App a = (App)App.Current;
                 if (a.CurrentUser == null)
                 {
-                    p = new Login();
-                    p.Title = "Login";
-                    p.BindingContext = new LoginViewModel();
+                    p = new RegisterOrLogin();
+                    p.Title = "Register or login";
+                    p.BindingContext = new RegisterOrLoginViewModel();
                 }
                 else
                 {
