@@ -29,7 +29,6 @@ namespace TriviaXamarinApp.ViewModels
             set { if (this.able != value) { this.able = value; OnPropertyChange("Able"); } }
         }
 
-        //Constructor
         public QuestionsViewModel()
         {
             App a = (App)App.Current;

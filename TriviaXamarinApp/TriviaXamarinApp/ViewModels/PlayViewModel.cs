@@ -109,14 +109,13 @@ namespace TriviaXamarinApp.ViewModels
 
             if (Score >= 3)
             {
-                bool isLoggedIn = App.Current.Properties.ContainsKey("IsLoggedIn") ? Convert.ToBoolean(App.Current.Properties["IsLoggedIn"]) : false;
-                Page p;
-                if (!isLoggedIn)
+                Page p = null;
+                App a = (App)App.Current;
+                if (a.CurrentUser == null)
                 {
                     p = new Login();
                     p.Title = "Login";
                     p.BindingContext = new LoginViewModel();
-                    //log.NextPage = new AddQuestion();
                 }
                 else
                 {
@@ -140,23 +139,6 @@ namespace TriviaXamarinApp.ViewModels
                     NavigateToPageEvent(p);
             }
         }
-
-        public ICommand NavigateToPageCommand { get; set; }
-        //public ICommand Home => new Command(GoHome);
-        //void GoHome()
-        //{
-        //    Page p;
-        //    if ((string)App.Current.Properties["IsLoggedIn"] == Boolean.TrueString)
-        //    {
-        //        p = new Play();
-        //    }
-        //    else
-        //    {
-        //        p = new Home();
-        //    }
-        //    if (NavigateToPageEvent != null)
-        //        NavigateToPageEvent(p);
-        //}
         public Action<Page> NavigateToPageEvent;
     }
 }

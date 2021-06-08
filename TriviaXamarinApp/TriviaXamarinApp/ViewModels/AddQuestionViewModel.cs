@@ -12,7 +12,6 @@ namespace TriviaXamarinApp.ViewModels
 {
     class AddQuestionViewModel : ModelViewBase, INotifyPropertyChanged
     {
-        public AddQuestionViewModel() { }
         public void AddQuestion()
         {
             Label = "";

@@ -25,7 +25,6 @@ namespace TriviaXamarinApp.ViewModels
         }
 
         public ICommand LoginCommand { get; set; }
-        public Page NextPage { get; set; }
 
         public LoginViewModel()
         {
